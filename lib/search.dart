@@ -23,9 +23,11 @@ class _SearchViewState extends State<SearchView> {
                 if (textEditingValue.text == '') {
                   return const Iterable<SerachModel>.empty();
                 }
-                return searchList.where(
+                Iterable<SerachModel> iterable = searchList.where(
                   (element) => element.title!.contains(textEditingValue.text),
                 );
+
+                return iterable.isNotEmpty ? iterable : [SerachModel()];
               },
               onSelected: (value) {},
               optionsViewBuilder: (BuildContext context,
@@ -40,35 +42,38 @@ class _SearchViewState extends State<SearchView> {
                       : '';
                 }
                 return Scaffold(
-                  body: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 10),
-                      Text(
-                        firsType,
-                        textAlign: TextAlign.right,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: list.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(list[index].image!),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(list[index].title ?? ''),
-                                const SizedBox(height: 10),
-                              ],
-                            );
-                          },
+                  body: options.first.title == null
+                      ? const Center(child: Text('Aranan İsimde Ürün Bulunamadı'))
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+                            Text(
+                              firsType,
+                              textAlign: TextAlign.right,
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: list.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(list[index].image!),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(list[index].title ?? ''),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 );
               },
               fieldViewBuilder: (BuildContext context,
